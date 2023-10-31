@@ -38,3 +38,6 @@ Lưu ý:
 Không git add . , hãy add từng file mình sửa bằng git status, ai làm gì sửa nhánh đấy
 Hãy clean code trước khi push
 Và ĐỪNG PUSH NODE MODULE nhé ạ
+
+ **Note**
+ Tạo file .env rồi copy content từ .env.example để có thể kết nối với mongoDB
