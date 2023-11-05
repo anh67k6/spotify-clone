@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const passport = require('passport');
-const authRoutes = require("./routes/auth");
+const authRoutes = require('./routes/auth');
+const songRoute = require('./routes/song');
 require('dotenv').config();
-const cors = require("cors");
+const cors = require('cors');
+const User = require('./models/User');
 const app = express();
 const port = 8000;
 
@@ -29,19 +31,14 @@ let opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = 'thisKeyIsSupposedToBeSecret';
 passport.use(
-  new JwtStrategy(opts, function (jwt_payload, done) {
-    User.findOne({ _id: jwt_payload.identifier }, function (err, user) {
-      // done(error, doesTheUserExist)
-      if (err) {
-        return done(err, false);
-      }
-      if (user) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-        // or you could create a new account
-      }
-    });
+  new JwtStrategy(opts, async function (jwt_payload, done) {
+    try {
+      const user = await User.findOne({ _id: jwt_payload.identifier });
+      if (user) return done(null, user);
+      else done(null, false);
+    } catch (err) {
+      console.log(err);
+    }
   })
 );
 
@@ -50,6 +47,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRoutes);
+app.use('/song', songRoute);
 
 app.listen(port, () => {
   console.log('App is running on port ' + port);
