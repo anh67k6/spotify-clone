@@ -37,7 +37,7 @@ passport.use(
       if (user) return done(null, user);
       else done(null, false);
     } catch (err) {
-      console.log(err);
+      done(err, false);
     }
   })
 );
