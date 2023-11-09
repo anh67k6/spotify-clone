@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const Song = require('../models/Song');
+const User = require('../models/User');
 
 router.post(
   '/create',
@@ -25,6 +26,30 @@ router.get(
   async (req, res) => {
     // We need to get all songs where artist id == currentUser._id
     const songs = await Song.find({ artist: req.user._id }).populate('artist');
+    return res.status(200).json({ data: songs });
+  }
+);
+
+//get songs published by an artist
+router.get(
+  '/get/artist/:artistId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { artistId } = req.params;
+    const artist = await User.findOne({ _id: artistId });
+    if (!artist) return res.status(301).json({ err: 'Artist does not exist' });
+    const songs = await Song.find({ artist: artistId });
+    return res.status(200).json({ data: songs });
+  }
+);
+
+// get songs by song name
+router.get(
+  '/get/songname/:songName',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { songName } = req.params;
+    const songs = await Song.find({ name: songName }).populate('artist');
     return res.status(200).json({ data: songs });
   }
 );
