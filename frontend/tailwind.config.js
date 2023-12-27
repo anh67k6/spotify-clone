@@ -13,6 +13,9 @@ module.exports = {
       backgroundColor: {
         "app-black": "#121212",
       },
+      colors: {
+        "app-black": "#121212",
+      },
     },
   },
   variants: {

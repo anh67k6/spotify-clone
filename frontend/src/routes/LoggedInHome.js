@@ -3,11 +3,11 @@ import spotify from "../assets/images/spotify_logo_white.svg";
 import IconText from "../components/shared/IconText";
 import { Icon } from "@iconify/react";
 import TextWithHover from "../components/shared/TextWithHover";
-function Home() {
+export default function LoggedInHome() {
   return (
     <div className="h-full w-full flex">
       {/* Left panel */}
-      <div className="h-full w-1/5 bg-black flex flex-col justify-between pb-10">
+      <div className="h-full w-1/5 bg-black flex flex-col justify-between pb-10 ">
         <div>
           {/* Logo */}
           <div className="logoDiv p-6">
@@ -24,6 +24,10 @@ function Home() {
               displayText={"Search"}
             />
             <IconText iconName={"icomoon-free:books"} displayText={"Library"} />
+            <IconText
+              iconName={"material-symbols:library-music-sharp"}
+              displayText={"My Music"}
+            />
           </div>
           <div className="pt-5">
             <IconText
@@ -47,21 +51,21 @@ function Home() {
       <div className="h-full w-4/5 bg-app-black">
         <div className="navbar w-full h-1/10 bg-black bg-opacity-30 flex items-center justify-end">
           <div className="w-1/2 flex h-full">
-            <div className="w-3/5 flex justify-around items-center">
+            <div className="w-2/3 flex justify-around items-center">
               <TextWithHover displayText={"Premium"} />
               <TextWithHover displayText={"Support"} />
               <TextWithHover displayText={"Download"} />
               <div className="h-1/2 border-r border-white"></div>
             </div>
-            <div className="w-2/5 flex justify-around h-full items-center">
-              <TextWithHover displayText={"Sign up"} />
-              <div className="bg-white h-2/3 px-8 flex items-center justify-center rounded-full font-semibold cursor-pointer">
-                Log in
+            <div className="w-1/3 flex justify-around h-full items-center">
+              <TextWithHover displayText={"Upload song"} />
+              <div className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer">
+                AC
               </div>
             </div>
           </div>
         </div>
-        <div className="h-9/10 p-8 pt-0 overflow-auto">
+        <div className=" p-8 pt-0 h-9/10 overflow-auto">
           <PlaylistView titleText="Focus" cardsData={focusCardsData} />
           <PlaylistView
             titleText="Spotify Playlists"
@@ -173,5 +177,3 @@ const spotifyPlaylistsCardData = [
       "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
   },
 ];
-
-export default Home;
