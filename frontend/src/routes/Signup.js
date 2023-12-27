@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { useCookies } from "react-cookie";
 import TextInput from "../components/shared/TextInput";
 import PasswordInput from "../components/shared/PasswordInput";
 import { Link } from "react-router-dom";
 import { makeUnauthenticatedPOSTRequest } from "../utils/serverHelpers";
+import { useNavigate } from "react-router-dom";
 
 const SignupComponent = () => {
   const [email, setEmail] = useState("");
@@ -12,26 +14,33 @@ const SignupComponent = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
+  const [cookie, setCookie] = useCookies(["token"]);
+  const navigate = useNavigate();
   const signUp = async () => {
     if (email !== confirmEmail) {
-      alert(
-        "Email and confirm email fields must match. Please check again!"
-      );
+      alert("Email and confirm email fields must match. Please check again!");
       return;
-    };
+    }
     const data = { email, password, username, firstName, lastName };
     // console.log(data);
     const response = await makeUnauthenticatedPOSTRequest(
       "/auth/register",
       data
-      );
-      if(response && !response.err){
-        console.log(response);
-        alert("Success");
-      }else{
-        alert("Failure");
-      }
+    );
+    if (response && !response.err) {
+      console.log(response);
+      const token = response.token;
+      const date = new Date();
+      date.setDate(date.getDate() + 30);
+      setCookie("token", token, {
+        path: "/",
+        expires: date,
+      });
+      navigate("/home");
+      alert("Success");
+    } else {
+      alert("Failure");
+    }
   };
 
   return (
@@ -87,11 +96,12 @@ const SignupComponent = () => {
           />
         </div>
         <div className="w-full flex items-center justify-center my-8">
-          <button className="bg-green-400 font-semibold p-3 px-10 rounded-full"
+          <button
+            className="bg-green-400 font-semibold p-3 px-10 rounded-full"
             onClick={(e) => {
               e.preventDefault();
               signUp();
-             }}
+            }}
           >
             Sign Up
           </button>
@@ -101,7 +111,7 @@ const SignupComponent = () => {
           Already have an account?
         </div>
         <div className="border border-gray-500 text-gray-500 w-full flex items-center justify-center py-4 rounded-full font-bold">
-          <Link to="/login">LOGIN IN  INSTEAD</Link>
+          <Link to="/login">LOGIN IN INSTEAD</Link>
         </div>
       </div>
     </div>
