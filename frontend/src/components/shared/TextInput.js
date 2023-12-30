@@ -18,7 +18,7 @@ const TextInput = ({
         id={label}
         value={value}
         onChange={(e) => {
-          setValue(e.target.value);
+          setValue?.(e.target.value);
         }}
       />
     </div>

@@ -13,17 +13,21 @@ export const makeUnauthenticatedPOSTRequest = async (route, body) => {
 };
 
 export const makeAuthenticatedPOSTRequest = async (route, body) => {
-  const token = getToken();
-  const response = await fetch(backendUrl + route, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-  const formattedResponse = await response.json();
-  return formattedResponse;
+  try {
+    const token = getToken();
+    const response = await fetch(backendUrl + route, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
+    const formattedResponse = await response.json();
+    return formattedResponse;
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 export const makeAuthenticatedGETRequest = async (route) => {
@@ -37,7 +41,7 @@ export const makeAuthenticatedGETRequest = async (route) => {
   });
   const formattedResponse = await response.json();
   return formattedResponse;
-}
+};
 
 const getToken = () => {
   const accessToken = document.cookie.replace(

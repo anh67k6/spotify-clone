@@ -148,6 +148,7 @@ const LoggedInContainer = ({children, curActiveScreen}) => {
                                 iconName={"material-symbols:add-box"}
                                 displayText={"Create Playlist"}
                                 onClick={() => {
+                                    console.log('clicked')
                                     setCreatePlaylistModalOpen(true);
                                 }}
                             />

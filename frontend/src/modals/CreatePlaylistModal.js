@@ -11,7 +11,7 @@ const CreatePlaylistModal = ({closeModal}) => {
             "/playlist/create",
             {name: playlistName, thumbnail: playlistThumbnail, songs: []}
         );
-        if (response._id) {
+        if (response?._id) {
             closeModal();
         }
     };
