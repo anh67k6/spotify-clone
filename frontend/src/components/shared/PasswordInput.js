@@ -1,7 +1,7 @@
-const PasswordInput = ({label,placeholder}) => {
+const PasswordInput = ({label, placeholder, value, setValue}) => {
   return (
     <div className="textInputDiv flex flex-col space-y-2 w-full">
-      <label for={label} className="font-semibold">
+      <label htmlFor={label} className="font-semibold">
         {label}
       </label>
       <input
@@ -9,6 +9,10 @@ const PasswordInput = ({label,placeholder}) => {
         placeholder={placeholder}
         className="p-3 border border-gray-400 border-solid rounded placeholder-gray-500"
         id={label}
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
       />
     </div>
   );
