@@ -11,6 +11,7 @@ import LoggedInHomeComponent from "./routes/LoggedInHome";
 import UploadSong from "./routes/UploadSong";
 import MyMusic from "./routes/MyMusic";
 import songContext from "./contexts/songContext";
+import SearchPage from "./routes/SearchPage";
 
 function App() {
   const [currentSong, setCurrentSong] = useState(null);
@@ -20,15 +21,16 @@ function App() {
     <div className="w-screen h-screen font-poppins">
       <BrowserRouter>
         {cookie.token ? (
-          <Routes>
-            <songContext.Provider value={{currentSong, setCurrentSong}}>
+          <songContext.Provider value={{ currentSong, setCurrentSong }}>
+            <Routes>
               <Route path="/" element={<HelloComponent />} />
               <Route path="/home" element={<LoggedInHomeComponent />} />
               <Route path="/uploadSong" element={<UploadSong />} />
               <Route path="/myMusic" element={<MyMusic />} />
+              <Route path="/search" element={<SearchPage />} />
               <Route path="*" element={<Navigate to="/home" />} />
-              </songContext.Provider >
-          </Routes>
+            </Routes>
+          </songContext.Provider >
 
         ) : (
           <Routes>
@@ -36,6 +38,10 @@ function App() {
             <Route path="/login" element={<LoginComponent />} />
             <Route path="/signup" element={<SignupComponent />} />
             <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/myMusic" element={<MyMusic />} />
+
+
           </Routes>
         )}
       </BrowserRouter>
