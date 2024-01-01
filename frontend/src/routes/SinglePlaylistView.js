@@ -27,7 +27,7 @@ const SinglePlaylistView = () => {
                         {playlistDetails.name}
                     </div>
                     <div className="pt-10 space-y-3">
-                        {playlistDetails.songs.map((item) => {
+                        {playlistDetails.song.length != 0 && playlistDetails.songs.map((item) => {
                             return (
                                 <SingleSongCard
                                     info={item}
