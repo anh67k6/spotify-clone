@@ -35,7 +35,10 @@ function App() {
             }}
           >
             <Routes>
-              <Route path="/" element={<HelloComponent />} />
+              <Route
+                path="/"
+                element={<Navigate to="/home" />} // Chuyển hướng đến /home khi người dùng đã đăng nhập
+              />
               <Route path="/home" element={<LoggedInHomeComponent />} />
               <Route path="/uploadSong" element={<UploadSong />} />
               <Route path="/myMusic" element={<MyMusic />} />
@@ -61,9 +64,5 @@ function App() {
     </div>
   );
 }
-
-const HelloComponent = () => {
-  return <div>This is hello from component</div>;
-};
 
 export default App;
