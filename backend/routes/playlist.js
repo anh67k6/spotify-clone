@@ -28,7 +28,7 @@ router.post(
 );
 
 router.get(
-  '/get/myplaylists',
+  '/get/me',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const artistId = req.user._id;
