@@ -8,11 +8,25 @@ import songContext from "../contexts/songContext";
 import CreatePlaylistModal from "../modals/CreatePlaylistModal";
 import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const LoggedInContainer = ({ children, curActiveScreen }) => {
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
   const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
+  const navigate = useNavigate();
 
+  const [cookie, setCookie, removeCookie] = useCookies(["token"]);
+
+  const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const handleIconClick = () => {
+    setPopupVisible(!isPopupVisible);
+  };
+  const handleLogOut = () => {
+    removeCookie("token");
+    navigate("/login");
+  };
   const {
     currentSong,
     setCurrentSong,
@@ -141,6 +155,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 iconName={"material-symbols:add-box"}
                 displayText={"Create Playlist"}
                 onClick={() => {
+                  console.log("clicked");
                   setCreatePlaylistModalOpen(true);
                 }}
               />
@@ -169,8 +184,21 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               </div>
               <div className="w-1/3 flex justify-around h-full items-center">
                 <TextWithHover displayText={"Upload Song"} />
-                <div className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer">
+                <div
+                  className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer relative"
+                  onClick={handleIconClick}
+                >
                   AC
+                  {isPopupVisible && (
+                    <div className="absolute top-12 transform -translate-x-1/2 border rounded shadow-md z-50">
+                      <button
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                        onClick={handleLogOut}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
