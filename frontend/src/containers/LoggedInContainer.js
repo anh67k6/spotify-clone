@@ -10,6 +10,7 @@ import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoggedInContainer = ({ children, curActiveScreen }) => {
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
@@ -183,7 +184,11 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 <div className="h-1/2 border-r border-white"></div>
               </div>
               <div className="w-1/3 flex justify-around h-full items-center">
-                <TextWithHover displayText={"Upload Song"} />
+                <TextWithHover
+                  targetLink={"/uploadSong"}
+                  displayText={"Upload Song"}
+                />
+
                 <div
                   className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer relative"
                   onClick={handleIconClick}
