@@ -11,7 +11,7 @@ const SinglePlaylistView = () => {
     useEffect(() => {
         const getData = async () => {
             const response = await makeAuthenticatedGETRequest(
-                "/playlist/get/playlist/" + playlistId
+                "/playlist/get/" + playlistId
             );
             setPlaylistDetails(response);
             console.log(response);
