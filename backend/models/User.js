@@ -22,10 +22,12 @@ const User = new mongoose.Schema({
     type: String,
     required: true,
   },
-  likedSongs: {
-    type: String,
-    default: '',
-  },
+  likedSongs: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'Song',
+    },
+  ],
   likedPlaylists: {
     type: String,
     default: '',

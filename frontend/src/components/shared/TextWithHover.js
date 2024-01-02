@@ -1,19 +1,18 @@
-const TextWithHover = ({ displayText, active, onClick })=> {
+import { Link } from "react-router-dom";
+
+function TextWithHover({ displayText, active, targetLink }) {
   return (
-    <div
-      className="flex items-center justify-start cursor-pointer"
-      
-    >
-      <div
-      onClick={onClick}
-        className={`${
-          active ? "text-white" : "text-gray-500"
-        } font-semibold text-lg hover:text-white`}
-        
-      >
-        {displayText}
+    <Link to={targetLink} className="block">
+      <div className="flex items-center justify-start cursor-pointer">
+        <div
+          className={`${
+            active ? "text-white" : "text-gray-500"
+          } font-semibold text-lg hover:text-white`}
+        >
+          {displayText}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

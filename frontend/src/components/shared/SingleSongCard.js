@@ -2,16 +2,16 @@ import { useContext, useEffect, useRef, useState } from "react";
 import songContext from "../../contexts/songContext";
 import { createFormatDuration } from "../../utils/song";
 
-const SingleSongCard = ({ info, playSound, duration }) => {
+const SingleSongCard = ({ info, playSound }) => {
   const { setCurrentSong } = useContext(songContext);
   const [formatDuration, setFormatDuration] = useState("");
 
   useEffect(() => {
-    if (duration) {
-      const formatDuration = createFormatDuration(duration);
+    if (info.duration) {
+      const formatDuration = createFormatDuration(info.duration);
       setFormatDuration(formatDuration);
     }
-  }, [duration]);
+  }, [info.duration]);
   return (
     <div
       className="flex hover:bg-gray-400 hover:bg-opacity-20 p-2 rounded-sm"

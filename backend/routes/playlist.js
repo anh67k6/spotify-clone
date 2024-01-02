@@ -48,7 +48,7 @@ router.get(
     // const playlist = await Playlist.findOne({ _id: playlistId }).populate('songs');
     const playlist = await Playlist.findOne({ _id: playlistId }).populate({
       path: 'songs',
-      populate: { path: 'artist' }
+      populate: { path: 'artist' },
     });
     if (!playlist) return res.status(301).json({ err: 'Invalid ID' });
     return res.status(200).json(playlist);
@@ -75,7 +75,7 @@ router.post(
     const { playlistId, songId } = req.body;
     const playlist = await Playlist.findOne({ _id: playlistId });
     if (!playlist)
-      return res.status(304).json({ err: 'Playlist doea not exist' });
+      return res.status(304).json({ err: 'Playlist does not exist' });
     if (
       !playlist.owner.equals(currentUser._id) &&
       !playlist.collaborators.includes(currentUser._id)

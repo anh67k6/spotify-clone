@@ -6,6 +6,7 @@ import SignupComponent from "./routes/Signup";
 import HomeComponent from "./routes/Home";
 import LoggedInHomeComponent from "./routes/LoggedInHome";
 import UploadSong from "./routes/UploadSong";
+import LikedSongs from "./routes/LikedSongs";
 import MyMusic from "./routes/MyMusic";
 import SearchPage from "./routes/SearchPage";
 import Library from "./routes/Library";
@@ -42,6 +43,7 @@ function App() {
               <Route path="/home" element={<LoggedInHomeComponent />} />
               <Route path="/uploadSong" element={<UploadSong />} />
               <Route path="/myMusic" element={<MyMusic />} />
+              <Route path="/likedSongs" element={<LikedSongs />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/library" element={<Library />} />
               <Route

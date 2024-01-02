@@ -15,8 +15,9 @@ import CreatePlaylistModal from "../modals/CreatePlaylistModal";
 import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
 import { useCookies } from "react-cookie";
-import {useNavigate}  from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createFormatDuration } from "../utils/song";
+import { useNavigate } from "react-router-dom";
 
 const LoggedInContainer = ({ children, curActiveScreen }) => {
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
@@ -67,6 +68,15 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     if (response._id) {
       setAddToPlaylistModalOpen(false);
     }
+  };
+  const addSongToLikedSongs = async () => {
+    const songId = currentSong._id;
+
+    const payload = { songId };
+    const response = await makeAuthenticatedPOSTRequest(
+      "/song/add-to-liked-songs",
+      payload
+    );
   };
 
   useEffect(() => {
@@ -191,6 +201,8 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               <IconText
                 iconName={"mdi:cards-heart"}
                 displayText={"Liked Songs"}
+                targetLink="/likedSongs"
+                active={curActiveScreen === "likedSongs"}
               />
             </div>
           </div>
@@ -213,9 +225,11 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               </div>
               <div className="w-1/3 flex justify-around h-full items-center">
                 <TextWithHover
+                  targetLink={"/uploadSong"}
                   displayText={"Upload Song"}
-                  onClick={()=>navigate('/uploadSong')}
+                  active={curActiveScreen === "uploadSong"}
                 />
+
                 <div
                   className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer relative"
                   onClick={handleIconClick}
@@ -374,6 +388,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               icon="ph:heart-bold"
               fontSize={25}
               className="cursor-pointer text-gray-500 hover:text-white"
+              onClick={addSongToLikedSongs}
             />
           </div>
         </div>
