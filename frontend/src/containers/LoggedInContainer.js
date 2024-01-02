@@ -83,7 +83,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
             setIsPaused(true);
           }
         }
-      }, 900);
+      }, 1000);
     }
     return () => interval && clearInterval(interval);
   }, [soundPlayed, isPaused, isReplay]);
@@ -121,7 +121,6 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
       setIsPaused(true);
     }
   };
-  console.log("songConte:", useContext(songContext));
   const handleIconClick = () => {
     setPopupVisible(!isPopupVisible);
   };

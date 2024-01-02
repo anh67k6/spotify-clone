@@ -4,7 +4,14 @@ import { createFormatDuration } from "../../utils/song";
 
 const SingleSongCard = ({ info, playSound, duration }) => {
   const { setCurrentSong } = useContext(songContext);
-  const formatDuration = duration ? createFormatDuration(duration) : "";
+  const [formatDuration, setFormatDuration] = useState("");
+
+  useEffect(() => {
+    if (duration) {
+      const formatDuration = createFormatDuration(duration);
+      setFormatDuration(formatDuration);
+    }
+  }, [duration]);
   return (
     <div
       className="flex hover:bg-gray-400 hover:bg-opacity-20 p-2 rounded-sm"
