@@ -32,7 +32,7 @@ const SignupComponent = () => {
     } else {
 
       if (password !== confirmPassword) {
-        alert("Email and confirm email fields must match. Please check again!");
+        toast.error("Password and confirm password fields must match. Please check again!");
         return;
       }
 

@@ -8,6 +8,7 @@ import TextWithHover from "../components/shared/TextWithHover";
 import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
 import { useNavigate } from "react-router-dom";
 import LoggedInContainer from "../containers/LoggedInContainer";
+import { toast } from "react-toastify";
 
 const UploadSong = () => {
   const [name, setName] = useState("");
@@ -20,10 +21,10 @@ const UploadSong = () => {
     const data = { name, thumbnail, track: playlistUrl };
     const response = await makeAuthenticatedPOSTRequest("/song/create", data);
     if (response.err) {
-      alert("Could not create song");
+      toast.error("Could not create song");
       return;
     }
-    alert("Success");
+    toast.error("Success");
     navigate("/home");
   };
 
