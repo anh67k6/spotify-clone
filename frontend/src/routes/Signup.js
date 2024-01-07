@@ -6,10 +6,11 @@ import PasswordInput from "../components/shared/PasswordInput";
 import { Link } from "react-router-dom";
 import { makeUnauthenticatedPOSTRequest } from "../utils/serverHelpers";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignupComponent = () => {
   const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -17,28 +18,42 @@ const SignupComponent = () => {
   const [cookie, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
   const signUp = async () => {
-    if (email !== confirmEmail) {
-      alert("Email and confirm email fields must match. Please check again!");
-      return;
-    }
     const data = { email, password, username, firstName, lastName };
 
-    const response = await makeUnauthenticatedPOSTRequest(
-      "/auth/register",
-      data
-    );
-    if (response && !response.err) {
-      const token = response.token;
-      const date = new Date();
-      date.setDate(date.getDate() + 30);
-      setCookie("token", token, {
-        path: "/",
-        expires: date,
-      });
-      navigate("/home");
-      alert("Success");
+    if (
+      !email ||
+      !password ||
+      !firstName ||
+      !lastName ||
+      !confirmPassword ||
+      !username
+    ) {
+      toast.error("Please fill in all fields.");
     } else {
-      alert("Failure");
+
+      if (password !== confirmPassword) {
+        alert("Email and confirm email fields must match. Please check again!");
+        return;
+      }
+
+      const response = await makeUnauthenticatedPOSTRequest(
+        "/auth/register",
+        data
+      );
+
+      if (response && !response.err) {
+        const token = response.token;
+        const date = new Date();
+        date.setDate(date.getDate() + 30);
+        setCookie("token", token, {
+          path: "/",
+          expires: date,
+        });
+        navigate("/home");
+        toast.success("Signup successful!");
+      } else {
+        toast.error("Login failed. Please try another email.");
+      }
     }
   };
 
@@ -59,13 +74,6 @@ const SignupComponent = () => {
           setValue={setEmail}
         />
         <TextInput
-          label="Confirm Email address"
-          placeholder="Enter your email again"
-          className="mb-6"
-          value={confirmEmail}
-          setValue={setConfirmEmail}
-        />
-        <TextInput
           label="Username"
           placeholder="Enter your username"
           className="mb-6"
@@ -78,18 +86,24 @@ const SignupComponent = () => {
           value={password}
           setValue={setPassword}
         />
+        <PasswordInput
+          label="Confirm password"
+          placeholder="Enter your password again"
+          value={confirmPassword}
+          setValue={setConfirmPassword}
+        />
         <div className="w-full flex justify-between items-center space-x-8">
           <TextInput
             label="First Name"
             placeholder="Enter Your First Name"
-            className="my-6"
+            className="mb-6"
             value={firstName}
             setValue={setFirstName}
           />
           <TextInput
             label="Last Name"
             placeholder="Enter Your Last Name"
-            className="my-6"
+            className="mb-6"
             value={lastName}
             setValue={setLastName}
           />

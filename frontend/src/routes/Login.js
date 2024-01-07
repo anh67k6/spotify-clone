@@ -5,6 +5,7 @@ import PasswordInput from "../components/shared/PasswordInput";
 import {Link, useNavigate} from "react-router-dom";
 import {makeUnauthenticatedPOSTRequest} from "../utils/serverHelpers";
 import {useCookies} from "react-cookie";
+import { toast } from 'react-toastify';
 
 const LoginComponent = () => {
     const [email, setEmail] = useState("");
@@ -13,22 +14,25 @@ const LoginComponent = () => {
     const navigate = useNavigate();
 
     const login = async () => {
-        const data = {email, password};
-        const response = await makeUnauthenticatedPOSTRequest(
-            "/auth/login",
-            data
-        );
-        if (response && !response.err) {
+        const data = { email, password };
+      
+        if (!email || !password) {
+          toast.error("Please fill in both email and password fields.");
+        } else {
+          const response = await makeUnauthenticatedPOSTRequest("/auth/login", data);
+      
+          if (response && !response.err) {
             const token = response.token;
             const date = new Date();
             date.setDate(date.getDate() + 30);
-            setCookie("token", token, {path: "/", expires: date});
-            alert("Success");
+            setCookie("token", token, { path: "/", expires: date });
+            toast.success("Login successful");
             navigate("/home");
-        } else {
-            alert("Failure");
+          } else {
+            toast.error("Login failed. Please check your email and password.");
+          }
         }
-    };
+      };      
 
     return (
         <div className="w-full h-full flex flex-col items-center">
@@ -53,7 +57,7 @@ const LoginComponent = () => {
                     value={password}
                     setValue={setPassword}
                 />
-                <div className=" w-full flex items-center justify-end my-8">
+                <div className=" w-full flex items-center justify-end mb-8">
                     <button
                         className="bg-green-400 font-semibold p-3 px-10 rounded-full"
                         onClick={(e) => {

@@ -3,14 +3,13 @@ import songContext from "../../contexts/songContext";
 
 const SingleSongCard = ({ info, playSound }) => {
     const { currentSong, setCurrentSong } = useContext(songContext);
-    console.log(info)
     function secondsToMinutes(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = Math.round(seconds % 60);
         const formattedTime = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
         return formattedTime;
       }
-      
+
     return (
         <div
             className="flex hover:bg-gray-400 hover:bg-opacity-20 p-2 rounded-sm"
