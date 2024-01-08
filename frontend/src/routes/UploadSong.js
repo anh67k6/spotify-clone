@@ -38,7 +38,6 @@ const UploadSong = () => {
 
   useEffect(() => {
     const getCates = async () => {
-      console.log("test");
       const response = await makeAuthenticatedGETRequest("/category/getAll");
       setCategories(response.data);
       if (response.err) {

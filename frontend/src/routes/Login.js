@@ -31,6 +31,7 @@ const LoginComponent = () => {
         const date = new Date();
         date.setDate(date.getDate() + 30);
         setCookie("token", token, { path: "/", expires: date });
+        setCookie("user", rest, { path: "/", expires: date });
         setToken(token);
         setUser(rest);
         toast.success("Login successful");

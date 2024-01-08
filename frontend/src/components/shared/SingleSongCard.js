@@ -2,9 +2,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import songContext from "../../contexts/songContext";
 import { createFormatDuration } from "../../utils/song";
 
-const SingleSongCard = ({ info, playSound }) => {
+const SingleSongCard = ({ info, playSound, handleCardClick }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { currentSong, setCurrentSong } = useContext(songContext);
+
   function secondsToMinutes(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.round(seconds % 60);
@@ -16,9 +16,7 @@ const SingleSongCard = ({ info, playSound }) => {
   return (
     <div
       className="flex hover:bg-gray-400 hover:bg-opacity-20 p-2 rounded-sm cursor-pointer"
-      onClick={() => {
-        setCurrentSong(info);
-      }}
+      onClick={handleCardClick}
     >
       <div
         className="w-14 h-14 bg-cover bg-center"

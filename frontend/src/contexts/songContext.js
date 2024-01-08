@@ -8,6 +8,16 @@ const songContext = createContext({
   setSoundPlayed: () => {},
   isPaused: null,
   setIsPaused: () => {},
+  playList: null,
+  setPlaylist: () => {},
+  location: null,
+  setLocation: () => {},
+  songIdx: null,
+  setSongIdx: () => {},
+  isShuffled: null,
+  setIsShuffled: () => {},
+  isLooped: null,
+  setIsLooped: () => {},
 });
 
 export default songContext;

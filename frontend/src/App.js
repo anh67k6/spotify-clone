@@ -21,9 +21,13 @@ import { UserContextProvider } from "./contexts/userContext";
 function App() {
   const [currentSong, setCurrentSong] = useState(null);
   const [soundPlayed, setSoundPlayed] = useState(null);
+  const [playList, setPlaylist] = useState(null);
   const [isPaused, setIsPaused] = useState(true);
   const [cookie, setCookie] = useCookies(["token"]);
-
+  const [location, setLocation] = useState(null);
+  const [songIdx, setSongIdx] = useState(null);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [isLooped, setIsLooped] = useState(false);
   return (
     <div className="w-screen h-screen font-poppins">
       <ToastContainer />
@@ -39,6 +43,16 @@ function App() {
                 setSoundPlayed,
                 isPaused,
                 setIsPaused,
+                playList,
+                setPlaylist,
+                location,
+                setLocation,
+                songIdx,
+                setSongIdx,
+                isLooped,
+                setIsLooped,
+                isShuffled,
+                setIsShuffled,
               }}
             >
               <Routes>
