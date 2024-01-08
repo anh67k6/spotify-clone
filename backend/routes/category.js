@@ -27,19 +27,22 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const categoryId = req.params.categoryId;
-
+    console.log('categoryId', categoryId);
     try {
-      const category = await Category.findOne({ _id: categoryId }).populate({
-        path: 'songs',
-      });
+      const categories = await Category.findById(categoryId)
+        .sort('name')
+        .populate({
+          path: 'songs',
+          options: { sort: { name: 1 } },
+        });
 
-      if (!category) {
+      if (!categories) {
         return res.status(404).json({ error: 'Category not found' });
       }
 
-      const songs = category.songs;
-      return res.status(200).json({ songs });
+      return res.status(200).json({ data: categories });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error: error.message });
     }
   }

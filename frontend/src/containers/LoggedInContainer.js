@@ -18,18 +18,23 @@ import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import { createFormatDuration } from "../utils/song";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import userContext from "../contexts/userContext";
 
 const LoggedInContainer = ({ children, curActiveScreen }) => {
+  const location = useLocation();
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
   const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
   const navigate = useNavigate();
-
+  const [currentActiveScreen, setCurrentActiveScreen] =
+    useState(curActiveScreen);
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
 
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
   const volumeRef = useRef(1);
+  const { user } = useContext(userContext);
   const {
     currentSong,
     setCurrentSong,
@@ -196,7 +201,9 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 displayText={"Create Playlist"}
                 onClick={() => {
                   setCreatePlaylistModalOpen(true);
+                  setCurrentActiveScreen("createPlaylist");
                 }}
+                active={currentActiveScreen === "createPlaylist"}
               />
               <IconText
                 iconName={"mdi:cards-heart"}
@@ -215,7 +222,23 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
         </div>
         {/* This second div will be the right part(main content) */}
         <div className="h-full w-4/5 bg-app-black overflow-auto">
-          <div className="navbar w-full h-1/10 bg-black bg-opacity-30 flex items-center justify-end">
+          <div
+            className={`navbar w-full h-1/10 bg-black bg-opacity-30 flex items-center ${
+              location.pathname.startsWith("/category")
+                ? "justify-between"
+                : "justify-end"
+            }`}
+          >
+            {location.pathname.startsWith("/category") && (
+              <div
+                className="flex items-center justify-center text-gray-200 hover:text-white ml-8 bg-gray-600 hover:bg-gray-400 rounded-full h-10 w-10 text-3xl cursor-pointer select-none"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                &lt;
+              </div>
+            )}
             <div className="w-1/2 flex h-full">
               <div className="w-2/3 flex justify-around items-center">
                 <TextWithHover displayText={"Premium"} />
@@ -234,7 +257,8 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                   className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer relative"
                   onClick={handleIconClick}
                 >
-                  AC
+                  {user?.firstName.slice(0, 1).toUpperCase() +
+                    user?.lastName.slice(0, 1).toUpperCase()}
                   {isPopupVisible && (
                     <div className="absolute top-12 transform -translate-x-1/2 border rounded shadow-md z-50">
                       <button

@@ -19,7 +19,7 @@ const CreatePlaylistModal = ({ closeModal }) => {
 
   return (
     <div
-      className="absolute bg-black w-screen h-screen bg-opacity-50 flex justify-center items-center"
+      className="absolute bg-black w-screen h-screen bg-opacity-50 flex justify-center items-center z-50"
       onClick={closeModal}
     >
       <div

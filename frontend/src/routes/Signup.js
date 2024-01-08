@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useCookies } from "react-cookie";
 import TextInput from "../components/shared/TextInput";
@@ -7,8 +7,10 @@ import { Link } from "react-router-dom";
 import { makeUnauthenticatedPOSTRequest } from "../utils/serverHelpers";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import userContext from "../contexts/userContext";
 
 const SignupComponent = () => {
+  const { setToken, setUser } = useContext(userContext);
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -30,9 +32,10 @@ const SignupComponent = () => {
     ) {
       toast.error("Please fill in all fields.");
     } else {
-
       if (password !== confirmPassword) {
-        toast.error("Password and confirm password fields must match. Please check again!");
+        toast.error(
+          "Password and confirm password fields must match. Please check again!"
+        );
         return;
       }
 
@@ -42,13 +45,16 @@ const SignupComponent = () => {
       );
 
       if (response && !response.err) {
-        const token = response.token;
+        const { token: authToken, ...rest } = response;
+        const token = authToken;
         const date = new Date();
         date.setDate(date.getDate() + 30);
         setCookie("token", token, {
           path: "/",
           expires: date,
         });
+        setUser(rest);
+        setToken(token);
         navigate("/home");
         toast.success("Signup successful!");
       } else {

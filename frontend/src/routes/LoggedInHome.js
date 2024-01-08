@@ -4,6 +4,7 @@ import LoggedInContainer from "../containers/LoggedInContainer";
 import { useContext } from "react";
 import songContext from "../contexts/songContext";
 import Howl from "howler";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -32,13 +33,16 @@ const Home = () => {
           key={item._id}
           titleText={item.name}
           cardsData={item.songs}
+          categoryId={item._id}
         />
       ))}
     </LoggedInContainer>
   );
 };
 
-const PlaylistView = ({ titleText, cardsData }) => {
+const PlaylistView = ({ titleText, cardsData, categoryId }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="text-white mt-8">
       <div className="flex flex-row justify-between">
@@ -50,6 +54,9 @@ const PlaylistView = ({ titleText, cardsData }) => {
           hover:text-white
           self-end
         "
+          onClick={() => {
+            navigate(`/category/${categoryId}`);
+          }}
         >
           See More &gt;&gt;
         </div>
@@ -84,8 +91,7 @@ const Card = ({ thumbnail, name, artist, item }) => {
           soundPlayed.pause();
           setIsPaused(true);
         }
-      } 
-      else {
+      } else {
         setCurrentSong(item);
       }
     } else {
