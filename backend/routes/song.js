@@ -8,12 +8,20 @@ router.post(
   '/create',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { name, thumbnail, track, duration } = req.body;
-    if (!name || !thumbnail || !track || !duration) {
+    const { name, thumbnail, track, duration, categoryId, singer } = req.body;
+    if (!name || !thumbnail || !track || !duration || !categoryId || !singer) {
       return res.status(301).json({ err: 'Not enough data to create song' });
     }
     const artist = req.user._id;
-    const songDetails = { name, thumbnail, track, artist, duration };
+    const songDetails = {
+      name,
+      thumbnail,
+      track,
+      artist,
+      duration,
+      categoryId,
+      singer,
+    };
     const createdSong = await Song.create(songDetails);
     return res.status(200).json(createdSong);
   }
@@ -29,7 +37,6 @@ router.get(
     return res.status(200).json({ data: songs });
   }
 );
-
 //get songs published by an artist
 router.get(
   '/get/artist/:artistId',
@@ -49,7 +56,9 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { songName } = req.params;
-    const songs = await Song.find({ name: { $regex: new RegExp(songName, 'i') } }).populate('artist');
+    const songs = await Song.find({
+      name: { $regex: new RegExp(songName, 'i') },
+    }).populate('artist');
     return res.status(200).json({ data: songs });
   }
 );
