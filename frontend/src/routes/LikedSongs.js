@@ -14,23 +14,28 @@ const LikedSongs = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      response.likedSongs.forEach((item) => {
+        item.artist = {
+          firstName: response.firstName,
+          lastName: response.lastName,
+        };
+      });
       setSongData(response.likedSongs);
-      console.log(response.likedSongs);
     };
     getData();
   }, [token]);
-
   return (
     <LoggedInContainer curActiveScreen="likedSongs">
       <div className="text-white text-xl font-semibold pb-4 pl-2 pt-8">
         Liked Songs
       </div>
       <div className="space-y-3 overflow-auto">
-        {songData.map((item) => {
-          return (
-            <SingleSongCard key={item._id} info={item} playSound={() => {}} />
-          );
-        })}
+        {songData?.length !== 0 &&
+          songData.map((item) => {
+            return (
+              <SingleSongCard key={item._id} info={item} playSound={() => {}} />
+            );
+          })}
       </div>
     </LoggedInContainer>
   );

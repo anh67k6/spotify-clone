@@ -10,7 +10,6 @@ const SearchPage = () => {
     const [songData, setSongData] = useState([]);
 
     const searchSong = async () => {
-        // This function will call the search api
         const response = await makeAuthenticatedGETRequest(
             "/song/get/songname/" + searchText
         );
