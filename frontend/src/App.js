@@ -13,6 +13,8 @@ import Library from "./routes/Library";
 import SinglePlaylistView from "./routes/SinglePlaylistView";
 import { useCookies } from "react-cookie";
 import songContext from "./contexts/songContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [currentSong, setCurrentSong] = useState(null);
@@ -22,6 +24,7 @@ function App() {
 
   return (
     <div className="w-screen h-screen font-poppins">
+      <ToastContainer />
       <BrowserRouter>
         {cookie.token ? (
           // logged in routes
