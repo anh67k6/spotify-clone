@@ -6,6 +6,7 @@ import User from '../components/users/user'
 import Song from '../components/songs/song'
 import Login from '../components/auth/Login';
 import NotFound from '../components/Not_Found_page'
+import UploadSong from '../components/songs/upload_song'
 import { useCookies } from 'react-cookie';
 
 
@@ -20,6 +21,7 @@ const Router = () => {
                         <Route index element={<Dashboard />} />
                         <Route path="/user" element={<User />} />
                         <Route path="/song" element={<Song />} />
+                        <Route path="/upload" element={<UploadSong />} />
                     </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
