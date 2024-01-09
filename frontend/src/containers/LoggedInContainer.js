@@ -43,8 +43,6 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
 
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(1);
   const volumeRef = useRef(1);
   const { user } = useContext(userContext);
   const {
@@ -64,8 +62,13 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     setIsLooped,
     isShuffled,
     setIsShuffled,
+    isMuted,
+    setIsMuted,
+    volume,
+    setVolume,
   } = useContext(songContext);
 
+  console.log(isMuted, volume);
   const firstUpdate = useRef(true);
   const [progressValue, setProgressValue] = useState(0);
   useLayoutEffect(() => {
@@ -128,6 +131,13 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     return () => interval && clearInterval(interval);
   }, [soundPlayed, isPaused, isLooped, playList]);
 
+  useEffect(() => {
+    if (soundPlayed) {
+      if (isMuted) {
+        soundPlayed.volume(0);
+      } else soundPlayed.volume(volume);
+    }
+  }, [soundPlayed, isMuted, volume]);
   const playSound = () => {
     if (!soundPlayed) {
       return;
@@ -463,6 +473,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 soundPlayed.volume(e.target.value / 100);
                 setVolume(e.target.value / 100);
               }}
+              disabled={!currentSong || !soundPlayed || isMuted}
             />
             <Icon
               icon="ic:round-playlist-add"

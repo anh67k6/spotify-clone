@@ -28,6 +28,8 @@ function App() {
   const [songIdx, setSongIdx] = useState(null);
   const [isShuffled, setIsShuffled] = useState(false);
   const [isLooped, setIsLooped] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(0.5);
   return (
     <div className="w-screen h-screen font-poppins">
       <ToastContainer />
@@ -53,6 +55,10 @@ function App() {
                 setIsLooped,
                 isShuffled,
                 setIsShuffled,
+                isMuted,
+                setIsMuted,
+                volume,
+                setVolume,
               }}
             >
               <Routes>

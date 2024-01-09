@@ -18,6 +18,10 @@ const songContext = createContext({
   setIsShuffled: () => {},
   isLooped: null,
   setIsLooped: () => {},
+  isMuted: null,
+  setIsMuted: () => {},
+  volume: null,
+  setVolume: () => {},
 });
 
 export default songContext;
