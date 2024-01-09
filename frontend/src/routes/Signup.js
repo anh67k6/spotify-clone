@@ -53,6 +53,10 @@ const SignupComponent = () => {
           path: "/",
           expires: date,
         });
+        setCookie("user", rest, {
+          path: "/",
+          expires: date,
+        });
         setUser(rest);
         setToken(token);
         navigate("/home");

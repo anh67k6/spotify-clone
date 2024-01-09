@@ -42,24 +42,25 @@ const Home = () => {
 
 const PlaylistView = ({ titleText, cardsData, categoryId }) => {
   const navigate = useNavigate();
-
   return (
     <div className="text-white mt-8">
       <div className="flex flex-row justify-between">
         <div className="text-2xl font-semibold mb-5">{titleText}</div>
-        <div
-          className="text-base mb-5 cursor-pointer select-none 
+        {cardsData.length == 5 && (
+          <div
+            className="text-base mb-5 cursor-pointer select-none 
           text-gray-400
           hover:underline
           hover:text-white
           self-end
         "
-          onClick={() => {
-            navigate(`/category/${categoryId}`);
-          }}
-        >
-          See More &gt;&gt;
-        </div>
+            onClick={() => {
+              navigate(`/category/${categoryId}`);
+            }}
+          >
+            See More &gt;&gt;
+          </div>
+        )}
       </div>
       <div className="w-full flex flex-row space-x-4">
         {cardsData.map((item) => (
@@ -123,31 +124,6 @@ const Card = ({ thumbnail, name, artist, item }) => {
 
 export default Home;
 
-//       className="absolute bottom-1/4 right-5 bg-green-500 p-2 rounded-full hover:bg-green-400 transform transition duration-100 ease-in-out hover:scale-110"
-//       onClick={() => {
-//         if (!currentSong) {
-//           setCurrentSong(item);
-//           setIsPlaying(true);
-//         } else {
-//           if (currentSong._id === item._id) {
-//             if (isPlaying) {
-//               soundPlayed.pause();
-//               setIsPlaying(false);
-//             } else {
-//               soundPlayed.play();
-//               setIsPlaying(true);
-//             }
-//           } else {
-//             setCurrentSong(item);
-//             setIsPlaying(true);
-//           }
-//         }
-//       }}
-//     >
-//       {isPlaying ? pauseIcon : playIcon}
-//     </div>
-//   );
-// };
 const pauseIcon = (
   <svg
     data-encore-id="icon"

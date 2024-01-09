@@ -21,8 +21,20 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import userContext from "../contexts/userContext";
 
+export const checkPlaylistScreen = (pathname) => {
+  if (
+    pathname.startsWith("/playlist") ||
+    pathname.startsWith("/myMusic") ||
+    pathname.startsWith("/likedSongs") ||
+    pathname.startsWith("/category")
+  ) {
+    return true;
+  }
+  return false;
+};
+
 const LoggedInContainer = ({ children, curActiveScreen }) => {
-  const location = useLocation();
+  const pathLocation = useLocation();
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
   const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -31,8 +43,6 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
 
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(1);
   const volumeRef = useRef(1);
   const { user } = useContext(userContext);
   const {
@@ -42,10 +52,24 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     setSoundPlayed,
     isPaused,
     setIsPaused,
+    playList,
+    setPlaylist,
+    location,
+    setLocation,
+    setSongIdx,
+    songIdx,
+    isLooped,
+    setIsLooped,
+    isShuffled,
+    setIsShuffled,
+    isMuted,
+    setIsMuted,
+    volume,
+    setVolume,
   } = useContext(songContext);
 
+  console.log(isMuted, volume);
   const firstUpdate = useRef(true);
-  const [isReplay, setIsReplay] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
   useLayoutEffect(() => {
     // the following if statement will prevent the useEffect from running on the first render.
@@ -92,17 +116,28 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
           setProgressValue(soundPlayed.seek() / soundPlayed.duration());
         } else if (!isPaused) {
           setProgressValue(0);
-          if (isReplay) {
+          if (isLooped) {
             playSound();
           } else {
-            setIsPaused(true);
+            if (!playList) {
+              setIsPaused(true);
+            } else {
+              nextSong();
+            }
           }
         }
       }, 1000);
     }
     return () => interval && clearInterval(interval);
-  }, [soundPlayed, isPaused, isReplay]);
+  }, [soundPlayed, isPaused, isLooped, playList]);
 
+  useEffect(() => {
+    if (soundPlayed) {
+      if (isMuted) {
+        soundPlayed.volume(0);
+      } else soundPlayed.volume(volume);
+    }
+  }, [soundPlayed, isMuted, volume]);
   const playSound = () => {
     if (!soundPlayed) {
       return;
@@ -127,6 +162,42 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     soundPlayed.pause();
   };
 
+  const nextSong = () => {
+    if (!playList || playList.length <= 1 || isLooped) return;
+    if (isLooped) {
+      setCurrentSong(playList[songIdx]);
+    } else {
+      let nextIdx;
+      if (isShuffled) {
+        while (true) {
+          nextIdx = Math.floor(Math.random() * playList.length);
+          if (nextIdx !== songIdx) {
+            break;
+          }
+        }
+      } else nextIdx = (songIdx + 1 + playList.length) % playList.length;
+      setSongIdx(nextIdx);
+      setCurrentSong(playList[nextIdx]);
+    }
+  };
+  const prevSong = () => {
+    if (!playList || playList.length <= 1 || isLooped) return;
+    if (isLooped) {
+      setCurrentSong(playList[songIdx]);
+    } else {
+      let nextIdx;
+      if (isShuffled) {
+        while (true) {
+          nextIdx = Math.floor(Math.random() * playList.length);
+          if (nextIdx !== songIdx) {
+            break;
+          }
+        }
+      } else nextIdx = (songIdx - 1 + playList.length) % playList.length;
+      setSongIdx(nextIdx);
+      setCurrentSong(playList[nextIdx]);
+    }
+  };
   const togglePlayPause = () => {
     if (isPaused) {
       playSound();
@@ -141,6 +212,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
   };
   const handleLogOut = () => {
     removeCookie("token");
+    removeCookie("user");
     navigate("/login");
   };
 
@@ -224,12 +296,12 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
         <div className="h-full w-4/5 bg-app-black overflow-auto">
           <div
             className={`navbar w-full h-1/10 bg-black bg-opacity-30 flex items-center ${
-              location.pathname.startsWith("/category")
+              pathLocation.pathname.startsWith("/category")
                 ? "justify-between"
                 : "justify-end"
             }`}
           >
-            {location.pathname.startsWith("/category") && (
+            {pathLocation.pathname.startsWith("/category") && (
               <div
                 className="flex items-center justify-center text-gray-200 hover:text-white ml-8 bg-gray-600 hover:bg-gray-400 rounded-full h-10 w-10 text-3xl cursor-pointer select-none"
                 onClick={() => {
@@ -300,12 +372,16 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               <Icon
                 icon="ph:shuffle-fill"
                 fontSize={30}
-                className="cursor-pointer text-gray-500 hover:text-white"
+                className={`cursor-pointer ${
+                  isShuffled ? "text-white" : "text-gray-500"
+                } hover:text-white`}
+                onClick={() => setIsShuffled((prev) => !prev)}
               />
               <Icon
                 icon="mdi:skip-previous-outline"
                 fontSize={30}
                 className="cursor-pointer text-gray-500 hover:text-white"
+                onClick={() => prevSong()}
               />
               <Icon
                 icon={
@@ -321,14 +397,15 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 icon="mdi:skip-next-outline"
                 fontSize={30}
                 className="cursor-pointer text-gray-500 hover:text-white"
+                onClick={() => nextSong()}
               />
               <Icon
                 icon="ic:twotone-repeat"
                 fontSize={30}
                 className={`cursor-pointer ${
-                  isReplay ? "text-white" : "text-gray-500"
+                  isLooped ? "text-white" : "text-gray-500"
                 } hover:text-white`}
-                onClick={() => setIsReplay((prev) => !prev)}
+                onClick={() => setIsLooped((prev) => !prev)}
               />
             </div>
             {/* <div>Progress Bar Here</div> */}
@@ -396,6 +473,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 soundPlayed.volume(e.target.value / 100);
                 setVolume(e.target.value / 100);
               }}
+              disabled={!currentSong || !soundPlayed || isMuted}
             />
             <Icon
               icon="ic:round-playlist-add"

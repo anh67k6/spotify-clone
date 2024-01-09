@@ -4,10 +4,16 @@ import LoggedInContainer from "../containers/LoggedInContainer";
 import { makeAuthenticatedGETRequest } from "../utils/serverHelpers";
 import SingleSongCard from "../components/shared/SingleSongCard";
 import { Howl } from "howler";
-
+import { useLocation } from "react-router-dom";
+import songContext from "../contexts/songContext";
+import { useContext } from "react";
+import { checkPlaylistScreen } from "../containers/LoggedInContainer";
 const SinglePlaylistView = () => {
+  const locationPath = useLocation();
   const [playlistDetails, setPlaylistDetails] = useState({});
   const { playlistId } = useParams();
+  const { setCurrentSong, setPlaylist, setLocation, location, setSongIdx } =
+    useContext(songContext);
 
   useEffect(() => {
     if (playlistDetails._id) return;
@@ -20,6 +26,26 @@ const SinglePlaylistView = () => {
     };
     getData();
   }, []);
+  function handleCardClick(index, item) {
+    if (
+      (!location && checkPlaylistScreen(locationPath.pathname)) ||
+      (location &&
+        checkPlaylistScreen(locationPath.pathname) &&
+        locationPath.pathname !== location)
+    ) {
+      setPlaylist(playlistDetails.songs);
+      setLocation(locationPath.pathname);
+      setSongIdx(index);
+      setCurrentSong(item);
+    } else if (
+      location &&
+      checkPlaylistScreen(locationPath.pathname) &&
+      locationPath.pathname === location
+    ) {
+      setSongIdx(index);
+      setCurrentSong(item);
+    }
+  }
   return (
     <LoggedInContainer curActiveScreen={"library"}>
       {playlistDetails._id && (
@@ -35,6 +61,7 @@ const SinglePlaylistView = () => {
                     info={item}
                     key={JSON.stringify(item)}
                     playSound={() => {}}
+                    handleCardClick={handleCardClick.bind(this, index, item)}
                   />
                 );
               })}
