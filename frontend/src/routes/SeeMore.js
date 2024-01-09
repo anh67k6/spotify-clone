@@ -1,36 +1,39 @@
 import { useState, useEffect, useContext } from "react";
 import SingleSongCard from "../components/shared/SingleSongCard";
 import { makeAuthenticatedGETRequest } from "../utils/serverHelpers";
-import LoggedInContainer, {
-  checkPlaylistScreen,
-} from "../containers/LoggedInContainer";
+import LoggedInContainer from "../containers/LoggedInContainer";
+import { useLocation, useParams } from "react-router-dom";
+import { checkPlaylistScreen } from "../containers/LoggedInContainer";
 import { Howl } from "howler";
 import songContext from "../contexts/songContext";
-import { useLocation } from "react-router-dom";
-
-const MyMusic = () => {
+const SeeMore = () => {
   const locationPath = useLocation();
-  const [songData, setSongData] = useState([]);
+  const { categoryId } = useParams();
   const { setCurrentSong, setPlaylist, setLocation, location, setSongIdx } =
     useContext(songContext);
+  const [songData, setSongData] = useState(null);
   useEffect(() => {
-    if (songData.length == 0) {
-      const getData = async () => {
-        const response = await makeAuthenticatedGETRequest("/song/get/mysongs");
+    const getData = async () => {
+      try {
+        const response = await makeAuthenticatedGETRequest(
+          `/category/get/${categoryId}/songs`
+        );
         setSongData(response.data);
-      };
-      getData();
-    }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getData();
   }, []);
-
   function handleCardClick(index, item) {
+
     if (
       (!location && checkPlaylistScreen(locationPath.pathname)) ||
       (location &&
         checkPlaylistScreen(locationPath.pathname) &&
         locationPath.pathname !== location)
     ) {
-      setPlaylist(songData);
+      setPlaylist(songData.songs);
       setLocation(locationPath.pathname);
       setSongIdx(index);
       setCurrentSong(item);
@@ -44,13 +47,13 @@ const MyMusic = () => {
     }
   }
   return (
-    <LoggedInContainer curActiveScreen="myMusic">
+    <LoggedInContainer curActiveScreen="home">
       <div className="text-white text-xl font-semibold pb-4 pl-2 pt-8">
-        My Songs
+        {songData?.name}
       </div>
       <div className="space-y-3 overflow-auto">
-        {songData.length !== 0 &&
-          songData.map((item, index) => {
+        {songData && songData?.songs.length !== 0 ? (
+          songData.songs.map((item, index) => {
             return (
               <SingleSongCard
                 info={item}
@@ -59,10 +62,15 @@ const MyMusic = () => {
                 handleCardClick={handleCardClick.bind(this, index, item)}
               />
             );
-          })}
+          })
+        ) : (
+          <div className="text-white text-xl font-semibold pb-4 pl-2 pt-8">
+            No songs found
+          </div>
+        )}
       </div>
     </LoggedInContainer>
   );
 };
 
-export default MyMusic;
+export default SeeMore;

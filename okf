@@ -1,0 +1,235 @@
+[33mcommit 2574255cc829a8ee1ce0339c78a38a64560976f4[m[33m ([m[1;36mHEAD -> [m[1;32mf-13[m[33m, [m[1;31morigin/f-13[m[33m)[m
+Author: Quangkubo209 <Quang.nn205167@sis.hust.edu.vn>
+Date:   Fri Dec 29 21:28:00 2023 +0700
+
+    add context
+
+[33mcommit 29b6321c3ae9fd4e995deabddf9c811e1d4c3313[m
+Author: Quangkubo209 <Quang.nn205167@sis.hust.edu.vn>
+Date:   Thu Dec 28 16:36:33 2023 +0700
+
+    adding my song page and play sound
+
+[33mcommit 9bc4455348456ea41b2ad7868def73d32048958b[m[33m ([m[1;31morigin/f-12[m[33m, [m[1;32mb-8[m[33m)[m
+Author: Hung Lai <hung.lt205155@sis.hust.edu.vn>
+Date:   Thu Dec 28 02:18:52 2023 +0700
+
+    Add Upload Vid
+
+[33mcommit bf703f1ca4a7912b9ef2d99512c1669c189a4ffb[m[33m ([m[1;31morigin/f-11[m[33m)[m
+Author: Hung Lai <hung.lt205155@sis.hust.edu.vn>
+Date:   Wed Dec 27 23:20:26 2023 +0700
+
+    Add cookie to route
+
+[33mcommit c8a92e78a21e0c2831d2709698c64ef73dd7c89d[m[33m ([m[1;31morigin/f-10[m[33m)[m
+Author: quoctrungict01 <quoctrung.3hd@gmail.com>
+Date:   Sat Dec 16 21:12:06 2023 +0700
+
+    Link FE to BE
+
+[33mcommit ecd0ed9b7067c893c5d4fb728397cfe6ba38cf2b[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/f-8[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Spawn021 <tranquangnam27012002@gmail.com>
+Date:   Wed Nov 29 20:09:39 2023 +0700
+
+    add Navbar
+
+[33mcommit e94f76a0cbdac02c0392175bab64ad81e4113524[m[33m ([m[1;31morigin/f-7[m[33m)[m
+Author: Hung Lai <hung.lt205155@sis.hust.edu.vn>
+Date:   Sat Nov 11 18:26:15 2023 +0700
+
+    Add Side Bar
+
+[33mcommit 090286774160189c58e2b4bdd4c39c89175330fb[m[33m ([m[1;31morigin/test[m[33m)[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Nov 11 11:12:33 2023 +0700
+
+    Change path get me playlist
+
+[33mcommit 40f2720b374e69eaf1998f59ecf30713c901dd92[m
+Merge: 1c87f6a ee3a983
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Nov 11 10:36:25 2023 +0700
+
+    Merge
+
+[33mcommit 1c87f6a5cb4c69bdc577a56ffb2cf3a2dd1f88e7[m
+Merge: 18dff68 bfd2edd
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Nov 11 10:27:33 2023 +0700
+
+    Merge b-9 into test
+
+[33mcommit ee3a983f57b942b0989341bfa654a27c7c8e8daa[m
+Merge: aa69d68 bfd2edd
+Author: ttmduc0309 <75298540+ttmduc0309@users.noreply.github.com>
+Date:   Thu Nov 9 16:26:23 2023 +0700
+
+    Merge pull request #8 from anh67k6/b-9
+    
+    B 9
+
+[33mcommit bfd2eddd620d2b51fc3393b08e8821ee07bb97d8[m[33m ([m[1;31morigin/b-9[m[33m)[m
+Author: Tong Tran Minh Duc <duc.ttm205147@sis.hust.edu>
+Date:   Thu Nov 9 16:23:55 2023 +0700
+
+    back9
+
+[33mcommit 18dff68501d6a60ef2191faf6b75ab210637a759[m
+Merge: 9093743 a3eacd1
+Author: ttmduc0309 <75298540+ttmduc0309@users.noreply.github.com>
+Date:   Thu Nov 9 08:40:39 2023 +0700
+
+    Merge pull request #7 from anh67k6/b-8
+    
+    B 8
+
+[33mcommit a3eacd1a14d5538ce97ff936fa93efd24c6825f0[m
+Author: Tong Tran Minh Duc <duc.ttm205147@sis.hust.edu>
+Date:   Thu Nov 9 08:30:41 2023 +0700
+
+    backend8
+
+[33mcommit aa69d68a9ee6a3bb427cd6e1cec9ce82a925a869[m
+Merge: 9276b2a dc34056
+Author: ttmduc0309 <75298540+ttmduc0309@users.noreply.github.com>
+Date:   Tue Nov 7 16:33:46 2023 +0700
+
+    Merge pull request #6 from anh67k6/b-7
+    
+    handle error
+
+[33mcommit dc3405608d5be3a783e237c79fcaffa221b66c8e[m[33m ([m[1;31morigin/b-7[m[33m)[m
+Author: Tong Tran Minh Duc <duc.ttm205147@sis.hust.edu>
+Date:   Tue Nov 7 16:30:49 2023 +0700
+
+    handle error
+
+[33mcommit 9276b2ac54af394b7c11089613811ce46cfd6a60[m
+Merge: 8556d44 f251747
+Author: quoctrungict01 <quoctrung.3hd@gmail.com>
+Date:   Tue Nov 7 11:21:38 2023 +0700
+
+    Merge branch 'f-6' into test
+
+[33mcommit 8556d449beb37a4ec3f11b26fc8cb5f9ce678de3[m
+Merge: def58a3 3845c17
+Author: quoctrungict01 <quoctrung.3hd@gmail.com>
+Date:   Tue Nov 7 11:21:05 2023 +0700
+
+    Merge branch 'test' of https://github.com/anh67k6/spotify-clone into test
+
+[33mcommit f25174766ec3927d19a9ba1d5adf88e1989ccddb[m
+Merge: def58a3 3845c17
+Author: quoctrungict01 <quoctrung.3hd@gmail.com>
+Date:   Tue Nov 7 11:17:53 2023 +0700
+
+    Merge branch 'test' of https://github.com/anh67k6/spotify-clone into f-6
+
+[33mcommit def58a39aa65273fed5c88d07c9a79c1680523b0[m[33m ([m[1;31morigin/f-6[m[33m)[m
+Author: quoctrungict01 <quoctrung.3hd@gmail.com>
+Date:   Tue Nov 7 11:08:21 2023 +0700
+
+    Signup page
+
+[33mcommit 3845c176c3f418ebce4507407b21a1ad79274895[m
+Merge: 50367b5 4ac2f4c
+Author: ttmduc0309 <75298540+ttmduc0309@users.noreply.github.com>
+Date:   Sun Nov 5 23:05:22 2023 +0700
+
+    Merge pull request #3 from anh67k6/b-7
+    
+    B 7
+
+[33mcommit 4ac2f4cfcab927d2167557722e19b508c0dbaff7[m
+Author: Tong Tran Minh Duc <duc.ttm205147@sis.hust.edu>
+Date:   Sun Nov 5 23:00:42 2023 +0700
+
+    b-6,7 first
+
+[33mcommit 90937434ca4403a57dd0accdd6b70a229942b5a0[m[33m ([m[1;31morigin/f-4[m[33m)[m
+Author: Spawn021 <tranquangnam27012002@gmail.com>
+Date:   Sat Nov 4 02:11:41 2023 +0700
+
+    add login part 3
+
+[33mcommit 6457b494e36f0a3d5728b663fb63420a1ed4bb8a[m[33m ([m[1;31morigin/f-3[m[33m)[m
+Author: Hung Lai <hung.lt205155@sis.hust.edu.vn>
+Date:   Thu Nov 2 00:45:42 2023 +0700
+
+    Add PasswordInput and TextInput
+
+[33mcommit a10787ce6389701cee224fe74fdc2cc4afaf150c[m[33m ([m[1;31morigin/master[m[33m)[m
+Merge: ad8692d 770a8e3
+Author: Nguyen Tien <125454923+tantien9e@users.noreply.github.com>
+Date:   Tue Oct 31 18:12:16 2023 +0700
+
+    Merge pull request #2 from anh67k6/b-3+4+5
+    
+    B 3+4+5
+
+[33mcommit 770a8e30e243e782e541bd77891116130bf8192f[m[33m ([m[1;31morigin/feature/backend-jwt[m[33m, [m[1;31morigin/b-3+4+5[m[33m)[m
+Author: Nguyen Tien <tantien9e@gmail.com>
+Date:   Tue Oct 31 18:04:49 2023 +0700
+
+    Finish register function
+
+[33mcommit a20d5611ab68ddcefca7701e91265b60c5da7af8[m
+Author: Nguyen Tien <tantien9e@gmail.com>
+Date:   Tue Oct 31 17:50:52 2023 +0700
+
+    Connect be to mongodb + add jwt
+
+[33mcommit ad8692d292dfd43399c488408f2e0500a67e9f33[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Mon Oct 30 21:30:09 2023 +0700
+
+    Fix readme
+
+[33mcommit 50367b51f9e5bdeaac1919e87f6ca40b922583fb[m[33m ([m[1;31morigin/f-2[m[33m)[m
+Author: quoctrungict01 <quoctrung.3hd@gmail.com>
+Date:   Mon Oct 30 21:15:05 2023 +0700
+
+    login part 1
+
+[33mcommit 4bd103e53f6cdbd42b793a4d3daac92e5a3593eb[m[33m ([m[1;31morigin/f-1[m[33m)[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Oct 28 20:33:41 2023 +0700
+
+    f-1 add router
+
+[33mcommit 25015c106d16dd9cc3645f1f15d4a3ab4c3386fd[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Oct 28 03:10:32 2023 +0700
+
+    b-1 create app + install tailwind
+
+[33mcommit 8e1809504399121f5dd456c2a7e24e7cb16ac588[m[33m ([m[1;31morigin/b-2[m[33m)[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Oct 28 02:37:57 2023 +0700
+
+    b-2 create user, song, playlist model
+
+[33mcommit d170715a07f95f1a2cebdf3ef29d6d650ab1a508[m[33m ([m[1;31morigin/b-1[m[33m)[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Sat Oct 28 02:16:16 2023 +0700
+
+    b-1 create index file
+
+[33mcommit cf8f04ce5eacf111695e83477204bc2c30db46bb[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Fri Oct 27 21:31:24 2023 +0700
+
+    Create folder be + fe
+
+[33mcommit 5f93c9c78c48226a11b6974e524a4782b77beace[m
+Author: anh67k6 <dohoanganh16032002@gmail.com>
+Date:   Fri Oct 27 21:29:59 2023 +0700
+
+    Create readme
+
+[33mcommit 3e4fe62ec043359a6171c4c986a70db3f2f202eb[m
+Author: Do Hoang Anh <72131483+anh67k6@users.noreply.github.com>
+Date:   Fri Oct 27 21:00:08 2023 +0700
+
+    Initial commit

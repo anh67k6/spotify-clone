@@ -3,19 +3,105 @@ const passport = require('passport');
 const router = express.Router();
 const Song = require('../models/Song');
 const User = require('../models/User');
+const CategoryModel = require('../models/Category');
 
 router.post(
   '/create',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const { name, thumbnail, track } = req.body;
-    if (!name || !thumbnail || !track) {
+    const { name, thumbnail, track, duration, singer, category } = req.body;
+    if (!name || !thumbnail || !track || !duration || !singer || !category) {
       return res.status(301).json({ err: 'Not enough data to create song' });
     }
     const artist = req.user._id;
-    const songDetails = { name, thumbnail, track, artist };
+    const songDetails = {
+      name,
+      thumbnail,
+      track,
+      artist,
+      duration,
+      singer,
+    };
     const createdSong = await Song.create(songDetails);
+    await CategoryModel.findOneAndUpdate(
+      {
+        _id: category,
+      },
+      {
+        $push: {
+          songs: createdSong._id,
+        },
+      }
+    );
     return res.status(200).json(createdSong);
+  }
+);
+
+router.delete(
+  '/delete/:songId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { songId } = req.params;
+
+      // Kiểm tra xem người dùng có quyền xóa người dùng hay không
+      // if (userId !== req.user._id.toString()) {
+      //   return res.status(403).json({ err: 'You do not have permission to delete this user' });
+      // }
+
+      // Xóa người dùng
+      await Song.findByIdAndDelete(songId);
+
+      return res.status(200).json({ message: 'Song deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ err: 'Server error' });
+    }
+  }
+);
+// Update song details by ID
+router.put(
+  '/update/:songId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { songId } = req.params;
+      const { name, thumbnail, singer } = req.body;
+
+      // Kiểm tra xem người dùng có quyền chỉnh sửa bài hát hay không
+      // (bạn có thể thêm logic kiểm tra quyền ở đây nếu cần)
+      
+      // Tìm và cập nhật bài hát
+      const updatedSong = await Song.findByIdAndUpdate(
+        songId,
+        { $set: { name, thumbnail, singer } },
+        { new: true }
+      );
+
+      if (!updatedSong) {
+        return res.status(404).json({ err: 'Song not found' });
+      }
+
+      return res.status(200).json({data: updatedSong});
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ err: 'Server error' });
+    }
+  }
+);
+
+
+//get all song
+router.get(
+  '/get/all-songs',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const allSongs = await Song.find().populate('artist');
+      return res.status(200).json({ data: allSongs });
+    } catch (error) {
+      return res.status(500).json({ error: 'Server error' });
+    }
   }
 );
 
@@ -49,7 +135,9 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { songName } = req.params;
-    const songs = await Song.find({ name: { $regex: new RegExp(songName, 'i') } }).populate('artist');
+    const songs = await Song.find({
+      name: { $regex: new RegExp(songName, 'i') },
+    }).populate('artist');
     return res.status(200).json({ data: songs });
   }
 );
@@ -65,8 +153,8 @@ router.get(
         return res.status(404).json({ error: 'User not found' });
       }
 
-      const likedSongs = user.likedSongs;
-      return res.status(200).json({ likedSongs });
+      const { likedSongs, firstName, lastName } = user;
+      return res.status(200).json({ likedSongs, firstName, lastName });
     } catch (error) {
       return res.status(500).json({ error: 'Server error' });
     }

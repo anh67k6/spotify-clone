@@ -13,55 +13,83 @@ import Library from "./routes/Library";
 import SinglePlaylistView from "./routes/SinglePlaylistView";
 import { useCookies } from "react-cookie";
 import songContext from "./contexts/songContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SeeMore from "./routes/SeeMore";
+import { UserContextProvider } from "./contexts/userContext";
 
 function App() {
   const [currentSong, setCurrentSong] = useState(null);
   const [soundPlayed, setSoundPlayed] = useState(null);
+  const [playList, setPlaylist] = useState(null);
   const [isPaused, setIsPaused] = useState(true);
   const [cookie, setCookie] = useCookies(["token"]);
-
+  const [location, setLocation] = useState(null);
+  const [songIdx, setSongIdx] = useState(null);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [isLooped, setIsLooped] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(0.5);
   return (
     <div className="w-screen h-screen font-poppins">
+      <ToastContainer />
       <BrowserRouter>
-        {cookie.token ? (
-          // logged in routes
-          <songContext.Provider
-            value={{
-              currentSong,
-              setCurrentSong,
-              soundPlayed,
-              setSoundPlayed,
-              isPaused,
-              setIsPaused,
-            }}
-          >
+        <UserContextProvider>
+          {cookie.token ? (
+            // logged in routes
+            <songContext.Provider
+              value={{
+                currentSong,
+                setCurrentSong,
+                soundPlayed,
+                setSoundPlayed,
+                isPaused,
+                setIsPaused,
+                playList,
+                setPlaylist,
+                location,
+                setLocation,
+                songIdx,
+                setSongIdx,
+                isLooped,
+                setIsLooped,
+                isShuffled,
+                setIsShuffled,
+                isMuted,
+                setIsMuted,
+                volume,
+                setVolume,
+              }}
+            >
+              <Routes>
+                <Route
+                  path="/"
+                  element={<Navigate to="/home" />} // Chuyển hướng đến /home khi người dùng đã đăng nhập
+                />
+                <Route path="/home" element={<LoggedInHomeComponent />} />
+                <Route path="/uploadSong" element={<UploadSong />} />
+                <Route path="/myMusic" element={<MyMusic />} />
+                <Route path="/likedSongs" element={<LikedSongs />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/category/:categoryId" element={<SeeMore />} />
+                <Route
+                  path="/playlist/:playlistId"
+                  element={<SinglePlaylistView />}
+                />
+                <Route path="*" element={<Navigate to="/home" />} />
+              </Routes>
+            </songContext.Provider>
+          ) : (
+            // logged out routes
             <Routes>
-              <Route
-                path="/"
-                element={<Navigate to="/home" />} // Chuyển hướng đến /home khi người dùng đã đăng nhập
-              />
-              <Route path="/home" element={<LoggedInHomeComponent />} />
-              <Route path="/uploadSong" element={<UploadSong />} />
-              <Route path="/myMusic" element={<MyMusic />} />
-              <Route path="/likedSongs" element={<LikedSongs />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/library" element={<Library />} />
-              <Route
-                path="/playlist/:playlistId"
-                element={<SinglePlaylistView />}
-              />
-              <Route path="*" element={<Navigate to="/home" />} />
+              <Route path="/home" element={<HomeComponent />} />
+              <Route path="/login" element={<LoginComponent />} />
+              <Route path="/signup" element={<SignupComponent />} />
+              <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
-          </songContext.Provider>
-        ) : (
-          // logged out routes
-          <Routes>
-            <Route path="/home" element={<HomeComponent />} />
-            <Route path="/login" element={<LoginComponent />} />
-            <Route path="/signup" element={<SignupComponent />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        )}
+          )}
+        </UserContextProvider>
       </BrowserRouter>
     </div>
   );

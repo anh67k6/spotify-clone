@@ -1,6 +1,14 @@
 import { openUploadWidget } from "../../utils/CloudinaryService";
 
-const CloudinaryUpload = ({ setUrl, setName }) => {
+const CloudinaryUpload = ({
+  setUrl,
+  setName,
+  resourceType,
+  multiple,
+  clientAllowedFormats,
+  title,
+  className,
+}) => {
   const uploadImageWidget = () => {
     let myUploadWidget = openUploadWidget(
       {
@@ -8,6 +16,9 @@ const CloudinaryUpload = ({ setUrl, setName }) => {
         uploadPreset: "jmyyrx6t",
 
         sources: ["local"],
+        resourceType,
+        multiple,
+        clientAllowedFormats,
       },
       function (error, result) {
         if (!error && result.event === "success") {
@@ -25,10 +36,10 @@ const CloudinaryUpload = ({ setUrl, setName }) => {
 
   return (
     <button
-      className="bg-white text-black  rounded-full p-4 font-semibold"
+      className={`bg-white text-black  rounded-full p-4 font-semibold ${className} whitespace-nowrap`}
       onClick={uploadImageWidget}
     >
-      Select Track
+      {title}
     </button>
   );
 };
