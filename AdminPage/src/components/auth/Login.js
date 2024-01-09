@@ -16,7 +16,8 @@ const LoginComponent = () => {
   const login = async () => {
     const data = { email, password };
     const response = await makeUnauthenticatedPOSTRequest('/auth/login', data);
-    if (response && !response.err) {
+    console.log(response);
+    if (response && !response.err && response.role === "ADMIN") {
       const token = response.token;
       const date = new Date();
       date.setDate(date.getDate() + 30);

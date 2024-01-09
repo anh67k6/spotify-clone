@@ -1,8 +1,41 @@
-import React from 'react'
+import React  from 'react'
+import { useState, useEffect } from 'react'
 import { FaUser, FaMusic, FaDollarSign, FaEye  } from "react-icons/fa"
+import { makeAuthenticatedGETRequest } from '../utils/serverHelpers'
 
 
 const Dashboard = () => {
+    const [users, setUsers] = useState([]);  
+    const fetchData = async () => {
+      try {
+        const response = await makeAuthenticatedGETRequest("/auth/get/all-users");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching user data: ", error);
+      }
+    };
+
+    const [songData, setSongData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await makeAuthenticatedGETRequest("/song/get/all-songs");
+        setSongData(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error("Error fetching song data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+    useEffect(() => {
+        fetchData();
+      }, []);
+  
+
 
     return (
         <div className='px-[25px] pt-[25px] bg-[#F8F9FC] pb-[40px]'>
@@ -13,7 +46,7 @@ const Dashboard = () => {
                 <div className=' h-[100px] rounded-[8px] bg-white border-l-[4px] border-[#4E73DF] flex items-center justify-between px-[30px] cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out'>
                     <div>
                         <h2 className='text-[#B589DF] text-[11px] leading-[17px] font-bold'>USERS</h2>
-                        <h1 className='text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]'>10</h1>
+                        <h1 className='text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]'>{users.length}</h1>
                     </div>
                     <FaUser fontSize={28} color="" />
 
@@ -22,7 +55,7 @@ const Dashboard = () => {
                     <div>
                         <h2 className='text-[#1cc88a] text-[11px] leading-[17px] font-bold'>
                             SONGS</h2>
-                        <h1 className='text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]'>20</h1>
+                        <h1 className='text-[20px] leading-[24px] font-bold text-[#5a5c69] mt-[5px]'>{songData.length}</h1>
                     </div>
                     <FaMusic fontSize={28} />
                 </div>
