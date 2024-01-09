@@ -66,7 +66,6 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     setIsShuffled,
   } = useContext(songContext);
 
-
   const firstUpdate = useRef(true);
   const [progressValue, setProgressValue] = useState(0);
   useLayoutEffect(() => {
@@ -127,7 +126,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
       }, 1000);
     }
     return () => interval && clearInterval(interval);
-  }, [soundPlayed, isPaused, isLooped, isShuffled, playList]);
+  }, [soundPlayed, isPaused, isLooped, playList]);
 
   const playSound = () => {
     if (!soundPlayed) {
@@ -154,26 +153,36 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
   };
 
   const nextSong = () => {
-    if (playList?.length <= 1 && isLooped) return;
+    if (!playList || playList.length <= 1 || isLooped) return;
     if (isLooped) {
       setCurrentSong(playList[songIdx]);
     } else {
       let nextIdx;
       if (isShuffled) {
-        nextIdx = Math.floor(Math.random() * playList.length);
+        while (true) {
+          nextIdx = Math.floor(Math.random() * playList.length);
+          if (nextIdx !== songIdx) {
+            break;
+          }
+        }
       } else nextIdx = (songIdx + 1 + playList.length) % playList.length;
       setSongIdx(nextIdx);
       setCurrentSong(playList[nextIdx]);
     }
   };
   const prevSong = () => {
-    if (playList?.length <= 1 && isLooped) return;
+    if (!playList || playList.length <= 1 || isLooped) return;
     if (isLooped) {
       setCurrentSong(playList[songIdx]);
     } else {
       let nextIdx;
       if (isShuffled) {
-        nextIdx = Math.floor(Math.random() * playList.length);
+        while (true) {
+          nextIdx = Math.floor(Math.random() * playList.length);
+          if (nextIdx !== songIdx) {
+            break;
+          }
+        }
       } else nextIdx = (songIdx - 1 + playList.length) % playList.length;
       setSongIdx(nextIdx);
       setCurrentSong(playList[nextIdx]);
