@@ -105,6 +105,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { makeAuthenticatedGETRequest } from '../../utils/serverHelpers';
 
+// Function to convert seconds to minutes and seconds
+const formatDuration = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+};
+
 const Song = () => {
   const navigate = useNavigate();
   const [songData, setSongData] = useState([]);
@@ -121,20 +128,19 @@ const Song = () => {
     };
 
     fetchData();
-  }, []); // Thêm dependency là mảng rỗng để đảm bảo useEffect chỉ chạy một lần sau khi component mount
+  }, []);
 
   const handleEdit = (songId) => {
-    // Xử lý logic chỉnh sửa bài hát
     console.log(`Editing song with ID: ${songId}`);
+    // Add your logic for handling song editing here
   };
 
   const handleDelete = (songId) => {
-    // Xử lý logic xóa bài hát
     console.log(`Deleting song with ID: ${songId}`);
+    // Add your logic for handling song deletion here
   };
 
   const handleAddSong = () => {
-    // Sử dụng navigate để chuyển hướng đến trang "/upload"
     navigate('/upload');
   };
 
@@ -173,7 +179,7 @@ const Song = () => {
                   <img src={song.thumbnail} alt={`Thumbnail for ${song.name}`} className='max-w-full max-h-full' />
                 </td>
                 <td className='border p-3 text-center overflow-hidden max-w-[150px] whitespace-nowrap'>
-                  {song.duration}
+                  {formatDuration(parseFloat(song.duration))}
                 </td>
                 <td className='border p-2 flex justify-center'>
                   <button
@@ -199,6 +205,8 @@ const Song = () => {
 };
 
 export default Song;
+
+
 
 
 
