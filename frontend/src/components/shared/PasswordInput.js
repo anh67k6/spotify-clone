@@ -1,6 +1,6 @@
 const PasswordInput = ({ label, placeholder, value, setValue }) => {
   return (
-    <div className="textInputDiv flex flex-col space-y-2 w-full">
+    <div className="textInputDiv flex flex-col space-y-2 w-full mb-6">
       <label htmlFor={label} className="font-semibold">
         {label}
       </label>

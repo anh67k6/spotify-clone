@@ -1,4 +1,10 @@
-import { useContext, useState, useLayoutEffect, useRef } from "react";
+import {
+  useContext,
+  useState,
+  useLayoutEffect,
+  useRef,
+  useEffect,
+} from "react";
 import { Howl, Howler } from "howler";
 import { Icon } from "@iconify/react";
 import spotify_logo from "../assets/images/spotify_logo_white.svg";
@@ -9,25 +15,36 @@ import CreatePlaylistModal from "../modals/CreatePlaylistModal";
 import AddToPlaylistModal from "../modals/AddToPlaylistModal";
 import { makeAuthenticatedPOSTRequest } from "../utils/serverHelpers";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { createFormatDuration } from "../utils/song";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import userContext from "../contexts/userContext";
+
+export const checkPlaylistScreen = (pathname) => {
+  if (
+    pathname.startsWith("/playlist") ||
+    pathname.startsWith("/myMusic") ||
+    pathname.startsWith("/likedSongs") ||
+    pathname.startsWith("/category")
+  ) {
+    return true;
+  }
+  return false;
+};
 
 const LoggedInContainer = ({ children, curActiveScreen }) => {
+  const pathLocation = useLocation();
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
   const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
   const navigate = useNavigate();
-
+  const [currentActiveScreen, setCurrentActiveScreen] =
+    useState(curActiveScreen);
   const [cookie, setCookie, removeCookie] = useCookies(["token"]);
 
   const [isPopupVisible, setPopupVisible] = useState(false);
-
-  const handleIconClick = () => {
-    setPopupVisible(!isPopupVisible);
-  };
-  const handleLogOut = () => {
-    removeCookie("token");
-    navigate("/login");
-  };
+  const volumeRef = useRef(1);
+  const { user } = useContext(userContext);
   const {
     currentSong,
     setCurrentSong,
@@ -35,10 +52,25 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     setSoundPlayed,
     isPaused,
     setIsPaused,
+    playList,
+    setPlaylist,
+    location,
+    setLocation,
+    setSongIdx,
+    songIdx,
+    isLooped,
+    setIsLooped,
+    isShuffled,
+    setIsShuffled,
+    isMuted,
+    setIsMuted,
+    volume,
+    setVolume,
   } = useContext(songContext);
 
+  console.log(isMuted, volume);
   const firstUpdate = useRef(true);
-
+  const [progressValue, setProgressValue] = useState(0);
   useLayoutEffect(() => {
     // the following if statement will prevent the useEffect from running on the first render.
     if (firstUpdate.current) {
@@ -49,6 +81,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     if (!currentSong) {
       return;
     }
+
     changeSong(currentSong.track);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSong && currentSong.track]);
@@ -75,6 +108,36 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     );
   };
 
+  useEffect(() => {
+    let interval;
+    if (soundPlayed && !isPaused) {
+      interval = setInterval(() => {
+        if (soundPlayed.playing()) {
+          setProgressValue(soundPlayed.seek() / soundPlayed.duration());
+        } else if (!isPaused) {
+          setProgressValue(0);
+          if (isLooped) {
+            playSound();
+          } else {
+            if (!playList) {
+              setIsPaused(true);
+            } else {
+              nextSong();
+            }
+          }
+        }
+      }, 1000);
+    }
+    return () => interval && clearInterval(interval);
+  }, [soundPlayed, isPaused, isLooped, playList]);
+
+  useEffect(() => {
+    if (soundPlayed) {
+      if (isMuted) {
+        soundPlayed.volume(0);
+      } else soundPlayed.volume(volume);
+    }
+  }, [soundPlayed, isMuted, volume]);
   const playSound = () => {
     if (!soundPlayed) {
       return;
@@ -99,6 +162,42 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
     soundPlayed.pause();
   };
 
+  const nextSong = () => {
+    if (!playList || playList.length <= 1 || isLooped) return;
+    if (isLooped) {
+      setCurrentSong(playList[songIdx]);
+    } else {
+      let nextIdx;
+      if (isShuffled) {
+        while (true) {
+          nextIdx = Math.floor(Math.random() * playList.length);
+          if (nextIdx !== songIdx) {
+            break;
+          }
+        }
+      } else nextIdx = (songIdx + 1 + playList.length) % playList.length;
+      setSongIdx(nextIdx);
+      setCurrentSong(playList[nextIdx]);
+    }
+  };
+  const prevSong = () => {
+    if (!playList || playList.length <= 1 || isLooped) return;
+    if (isLooped) {
+      setCurrentSong(playList[songIdx]);
+    } else {
+      let nextIdx;
+      if (isShuffled) {
+        while (true) {
+          nextIdx = Math.floor(Math.random() * playList.length);
+          if (nextIdx !== songIdx) {
+            break;
+          }
+        }
+      } else nextIdx = (songIdx - 1 + playList.length) % playList.length;
+      setSongIdx(nextIdx);
+      setCurrentSong(playList[nextIdx]);
+    }
+  };
   const togglePlayPause = () => {
     if (isPaused) {
       playSound();
@@ -107,6 +206,14 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
       pauseSound();
       setIsPaused(true);
     }
+  };
+  const handleIconClick = () => {
+    setPopupVisible(!isPopupVisible);
+  };
+  const handleLogOut = () => {
+    removeCookie("token");
+    removeCookie("user");
+    navigate("/login");
   };
 
   return (
@@ -165,9 +272,10 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 iconName={"material-symbols:add-box"}
                 displayText={"Create Playlist"}
                 onClick={() => {
-                  console.log("clicked");
                   setCreatePlaylistModalOpen(true);
+                  setCurrentActiveScreen("createPlaylist");
                 }}
+                active={currentActiveScreen === "createPlaylist"}
               />
               <IconText
                 iconName={"mdi:cards-heart"}
@@ -186,7 +294,23 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
         </div>
         {/* This second div will be the right part(main content) */}
         <div className="h-full w-4/5 bg-app-black overflow-auto">
-          <div className="navbar w-full h-1/10 bg-black bg-opacity-30 flex items-center justify-end">
+          <div
+            className={`navbar w-full h-1/10 bg-black bg-opacity-30 flex items-center ${
+              pathLocation.pathname.startsWith("/category")
+                ? "justify-between"
+                : "justify-end"
+            }`}
+          >
+            {pathLocation.pathname.startsWith("/category") && (
+              <div
+                className="flex items-center justify-center text-gray-200 hover:text-white ml-8 bg-gray-600 hover:bg-gray-400 rounded-full h-10 w-10 text-3xl cursor-pointer select-none"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                &lt;
+              </div>
+            )}
             <div className="w-1/2 flex h-full">
               <div className="w-2/3 flex justify-around items-center">
                 <TextWithHover displayText={"Premium"} />
@@ -205,7 +329,8 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                   className="bg-white w-10 h-10 flex items-center justify-center rounded-full font-semibold cursor-pointer relative"
                   onClick={handleIconClick}
                 >
-                  AC
+                  {user?.firstName.slice(0, 1).toUpperCase() +
+                    user?.lastName.slice(0, 1).toUpperCase()}
                   {isPopupVisible && (
                     <div className="absolute top-12 transform -translate-x-1/2 border rounded shadow-md z-50">
                       <button
@@ -237,9 +362,7 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 {currentSong.name}
               </div>
               <div className="text-xs text-gray-500 hover:underline cursor-pointer">
-                {currentSong.artist.firstName +
-                  " " +
-                  currentSong.artist.lastName}
+                {currentSong.singer}
               </div>
             </div>
           </div>
@@ -249,12 +372,16 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
               <Icon
                 icon="ph:shuffle-fill"
                 fontSize={30}
-                className="cursor-pointer text-gray-500 hover:text-white"
+                className={`cursor-pointer ${
+                  isShuffled ? "text-white" : "text-gray-500"
+                } hover:text-white`}
+                onClick={() => setIsShuffled((prev) => !prev)}
               />
               <Icon
                 icon="mdi:skip-previous-outline"
                 fontSize={30}
                 className="cursor-pointer text-gray-500 hover:text-white"
+                onClick={() => prevSong()}
               />
               <Icon
                 icon={
@@ -270,16 +397,84 @@ const LoggedInContainer = ({ children, curActiveScreen }) => {
                 icon="mdi:skip-next-outline"
                 fontSize={30}
                 className="cursor-pointer text-gray-500 hover:text-white"
+                onClick={() => nextSong()}
               />
               <Icon
                 icon="ic:twotone-repeat"
                 fontSize={30}
-                className="cursor-pointer text-gray-500 hover:text-white"
+                className={`cursor-pointer ${
+                  isLooped ? "text-white" : "text-gray-500"
+                } hover:text-white`}
+                onClick={() => setIsLooped((prev) => !prev)}
               />
             </div>
             {/* <div>Progress Bar Here</div> */}
+            <div
+              className="  flex flex-row h-1 mt-2 justify-between items-center space-x-2"
+              style={{
+                width: "50%",
+              }}
+            >
+              <div className="text-xs select-none">
+                {createFormatDuration(
+                  Math.ceil(progressValue * currentSong.duration)
+                )}
+              </div>
+              <input
+                className="  flex-1 h-full appearance-none bg-gray-300 rounded-full"
+                type="range"
+                value={progressValue * 100}
+                min="0"
+                max="100"
+                onChange={(e) => {
+                  const newValue = e.target.value / 100;
+                  setProgressValue(newValue);
+                  soundPlayed.seek(newValue * soundPlayed.duration());
+                }}
+              />
+              <div className="text-xs select-none">
+                {createFormatDuration(currentSong.duration)}
+              </div>
+            </div>
           </div>
           <div className="w-1/4 flex justify-end pr-4 space-x-4 items-center">
+            {!isMuted ? (
+              <Icon
+                icon="ic:baseline-volume-up"
+                fontSize={30}
+                className="cursor-pointer text-gray-500 hover:text-white"
+                onClick={() => {
+                  setIsMuted(true);
+                  soundPlayed.volume(0);
+                  volumeRef.current = volume;
+                  setVolume(0);
+                }}
+              />
+            ) : (
+              <Icon
+                icon="ic:baseline-volume-off"
+                fontSize={30}
+                className="cursor-pointer text-white "
+                onClick={() => {
+                  setIsMuted(false);
+                  soundPlayed.volume(volumeRef.current);
+                  setVolume(volumeRef.current);
+                }}
+              />
+            )}
+            <input
+              className="h-1 appearance-none bg-gray-300 rounded-full"
+              type="range"
+              min="0"
+              max="100"
+              defaultValue="100"
+              value={volume * 100}
+              onChange={(e) => {
+                soundPlayed.volume(e.target.value / 100);
+                setVolume(e.target.value / 100);
+              }}
+              disabled={!currentSong || !soundPlayed || isMuted}
+            />
             <Icon
               icon="ic:round-playlist-add"
               fontSize={30}

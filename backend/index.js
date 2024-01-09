@@ -6,6 +6,7 @@ const passport = require('passport');
 const authRoutes = require('./routes/auth');
 const songRoute = require('./routes/song');
 const playlistRoute = require('./routes/playlist');
+const categoryRoute = require('./routes/category');
 require('dotenv').config();
 const cors = require('cors');
 const User = require('./models/User');
@@ -50,6 +51,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/song', songRoute);
 app.use('/playlist', playlistRoute);
+app.use('/category', categoryRoute);
 
 app.listen(port, () => {
   console.log('App is running on port ' + port);

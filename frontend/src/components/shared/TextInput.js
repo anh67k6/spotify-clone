@@ -5,6 +5,7 @@ const TextInput = ({
   value,
   setValue,
   labelClassName,
+  readonly = false,
 }) => {
   return (
     <div className={`textInputDiv flex flex-col space-y-2 w-full ${className}`}>
@@ -20,6 +21,7 @@ const TextInput = ({
         onChange={(e) => {
           setValue?.(e.target.value);
         }}
+        readOnly={readonly}
       />
     </div>
   );
