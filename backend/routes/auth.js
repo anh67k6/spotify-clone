@@ -1,8 +1,46 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const passport = require('passport');
 const bcrypt = require('bcrypt');
 const { getToken } = require('../utils/helpers');
+
+router.delete(
+  '/delete/:userId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { userId } = req.params;
+
+      // Kiểm tra xem người dùng có quyền xóa người dùng hay không
+      // if (userId !== req.user._id.toString()) {
+      //   return res.status(403).json({ err: 'You do not have permission to delete this user' });
+      // }
+
+      // Xóa người dùng
+      await User.findByIdAndDelete(userId);
+
+      return res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ err: 'Server error' });
+    }
+  }
+);
+
+//get all song
+router.get(
+  '/get/all-users',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const allUsers = await User.find();
+      return res.status(200).json({ data: allUsers });
+    } catch (error) {
+      return res.status(500).json({ error: 'Server error' });
+    }
+  }
+);
 
 // This POST route will help to register a user
 router.post('/register', async (req, res) => {

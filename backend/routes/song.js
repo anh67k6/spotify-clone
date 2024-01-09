@@ -37,6 +37,74 @@ router.post(
   }
 );
 
+router.delete(
+  '/delete/:songId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { songId } = req.params;
+
+      // Kiểm tra xem người dùng có quyền xóa người dùng hay không
+      // if (userId !== req.user._id.toString()) {
+      //   return res.status(403).json({ err: 'You do not have permission to delete this user' });
+      // }
+
+      // Xóa người dùng
+      await Song.findByIdAndDelete(songId);
+
+      return res.status(200).json({ message: 'Song deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ err: 'Server error' });
+    }
+  }
+);
+// Update song details by ID
+router.put(
+  '/update/:songId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { songId } = req.params;
+      const { name, thumbnail, singer } = req.body;
+
+      // Kiểm tra xem người dùng có quyền chỉnh sửa bài hát hay không
+      // (bạn có thể thêm logic kiểm tra quyền ở đây nếu cần)
+      
+      // Tìm và cập nhật bài hát
+      const updatedSong = await Song.findByIdAndUpdate(
+        songId,
+        { $set: { name, thumbnail, singer } },
+        { new: true }
+      );
+
+      if (!updatedSong) {
+        return res.status(404).json({ err: 'Song not found' });
+      }
+
+      return res.status(200).json({data: updatedSong});
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ err: 'Server error' });
+    }
+  }
+);
+
+
+//get all song
+router.get(
+  '/get/all-songs',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const allSongs = await Song.find().populate('artist');
+      return res.status(200).json({ data: allSongs });
+    } catch (error) {
+      return res.status(500).json({ error: 'Server error' });
+    }
+  }
+);
+
 //get route to all the songs a user has published
 router.get(
   '/get/mysongs',

@@ -1,18 +1,68 @@
-// User.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-toastify/dist/ReactToastify.css';
+import DeleteUserDialog from './DeleteUserDialog';
+import { makeAuthenticatedDELETERequest, makeAuthenticatedGETRequest } from '../../utils/serverHelpers';
 
 const User = () => {
-  const users = [
-    { id: 1, username: 'user1', email: 'user1@example.com', role: 'admin' },
-    { id: 2, username: 'user2', email: 'user2@example.com', role: 'member' },
-    { id: 3, username: 'user3', email: 'user3@example.com', role: 'member' },
-    // Thêm các người dùng khác nếu cần
-  ];
+  const [users, setUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const handleDelete = (userId) => {
-    // Xử lý logic xóa người dùng
-    console.log(`Deleting user with ID: ${userId}`);
+  const fetchData = async () => {
+    try {
+      const response = await makeAuthenticatedGETRequest("/auth/get/all-users");
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    }
   };
+
+  const handleDelete = async (userID) => {
+    setSelectedUserId(userID);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    try {
+      const response = await makeAuthenticatedDELETERequest(`/auth/delete/${selectedUserId}`);
+      setUsers(users.filter(user => user._id !== selectedUserId));
+      toast.success('User deleted successfully');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Error deleting user');
+    }
+    setSelectedUserId(null);
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedUserId(null);
+  };
+
+  useEffect(() => {
+    if (selectedUserId !== null) {
+      confirmAlert({
+        customUI: ({ onClose }) => {
+          return (
+            <DeleteUserDialog
+              onDeleteConfirmed={() => {
+                handleDeleteConfirmed();
+                onClose();
+              }}
+              onCancel={() => {
+                handleCancelDelete();
+                onClose();
+              }}
+            />
+          );
+        },
+        closeOnClickOutside: false,
+      });
+    }
+  }, [selectedUserId]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className='px-6 py-4 bg-gray-200'>
@@ -29,7 +79,7 @@ const User = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id}>
+              <tr key={user._id}>
                 <td className='border p-3 text-center'>{user.username}</td>
                 <td className='border p-3 text-center'>{user.email}</td>
                 <td className={`border p-3 text-center ${user.role === 'admin' ? 'text-red-500' : 'text-green-500'}`}>
@@ -38,7 +88,7 @@ const User = () => {
                 <td className='border p-2 flex justify-center'>
                   <button
                     className='bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded'
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDelete(user._id)}
                   >
                     Delete
                   </button>
@@ -48,14 +98,9 @@ const User = () => {
           </tbody>
         </table>
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
 export default User;
-
-
-
-
-
-
